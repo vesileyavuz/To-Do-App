@@ -24,7 +24,7 @@ defineProps({
 </script>
 
 <style scoped>
-.line-througt {
+.line-through {
     text-decoration: line-through;
 }
 </style>
