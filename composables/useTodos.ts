@@ -10,18 +10,21 @@ interface Todo {
 const todos = ref<Todo[]>([]);
 
 const fetchTodos = async () => {
-    try{
-        const response = await fetch('https://jsonplaceholder.typicode.com/todos?_limit=5');
+    try {
+        const response = await fetch('https://jsonplaceholder.typicode.com/todos?_limit=10');
+        if (!response.ok) {
+            throw new Error("Görevler yüklenemedi.");
+        }
         todos.value = await response.json();
-    }   catch (error) {
-        console.error(error);
+        localStorage.setItem('todos', JSON.stringify(todos.value));
+    } catch (error) {
+        alert("Görevler yüklenirken hata oluştu.");
     }
 };
 
 const addTodo = async (title: string) => {
     if (!title.trim()) return;
-    const newTodo: Todo = { title, completed: false, userId: 1, id: Date.now() };
-
+const newTodo: Todo = { title, completed: false, userId: 1, id: Date.now() };
     try {
         const response = await fetch('https://jsonplaceholder.typicode.com/todos', {
             method: "POST",
@@ -31,56 +34,53 @@ const addTodo = async (title: string) => {
         const addedTodo = await response.json();
         addedTodo.id = newTodo.id;
         todos.value.push(addedTodo);
-
-        console.log("Yeni eklenen görev ID:", addedTodo.id);
     }   catch (error) {
-        console.error("Görev eklenirken hata oluştu:", error);
+        alert("Görev eklenirken hata oluştu.");
     }
 };
 
-        const updatedTodo = async (id: number, newTitle: string) => {
+const updateTodo = async (id: number, newTitle: string) => {
+    if (!newTitle.trim()) return;
 
     try {
         const response = await fetch(`https://jsonplaceholder.typicode.com/todos/${id}`, {
-            method: "PUT",
-            body: JSON.stringify({ title: newTitle }),
-            headers: { 'Content-Type': 'application/json' },
+            method: 'PUT',
+            body: JSON.stringify(newTitle),
+            headers: {
+                'Content-type': 'application/json'
+            }
         });
 
         if (!response.ok) {
             throw new Error("Görev güncellenemedi.");
-
         }
+
         const updatedTodo = await response.json();
         const index = todos.value.findIndex(todo => todo.id === id);
         if (index !== -1) {
             todos.value[index].title = updatedTodo.title;
         }
-        console.log("Görev güncellendi:", updatedTodo);
-        
-    }   catch (error) {
-        console.error("Görev güncellenirken hata oluştu:", error);
+        alert('Görev başarıyla güncellendi');
+    } catch (error) {
+        alert('Görev güncellenirken bir hata oluştu');
     }
 };
+
    const deleteTodo = async (id: number) => {
-    console.log("Silinmek istenen görev ID:", id);
-    console.log("Silinmeden önceki görev listesi:", todos.value.map(todo => todo.id));
     try {
         await fetch(`https://jsonplaceholder.typicode.com/todos/${id}`, {
             method: "DELETE",
         });
         todos.value = todos.value.filter(todo => todo.id !== id);
-        console.log("Silindikten sonraki görev listesi:", todos.value.map(todo => todo.id));
     }   catch (error) {
-        console.error("Görev silinirken hata oluştu:", error);
+        alert("Görev silinirken hata oluştu.");
     }
 };
 
 const completedTodos = computed(() => todos.value.filter(todo => todo.completed));
 const pendingTodos = computed(() => todos.value.filter(todo => !todo.completed));
 
-onMounted(fetchTodos);
-
 export default function useTodos() {
-    return { todos, addTodo, updatedTodo, deleteTodo, completedTodos, pendingTodos };
+    return { todos, addTodo, updateTodo, deleteTodo, completedTodos, pendingTodos, fetchTodos };
 }
+
