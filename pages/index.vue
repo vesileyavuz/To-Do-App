@@ -8,7 +8,7 @@
                 <input v-model="newTodo" type="text" class="border border-gray-300 dark:border-white mr-4 rounded-xl" placeholder="Yeni görev ekle">
                 <button class="bg-indigo-500 hover:bg-fuchsia-500 text-white py-2 px-4 rounded-xl">Ekle</button>
             </form>
-            <div class="task-list-container overflow-y-auto max-h-96">
+            <div class="task-list-container overflow-y-auto h-[80vh]">
             <table class="min-w-full table-auto border-separate border-spacing-2 border border-white dark:border-white rounded-xl">
                 <thead>
                     <tr>
@@ -46,7 +46,7 @@ const handleAddTodo = () => {
 onMounted(() => {
     const savedTodos = localStorage.getItem('todos');
     if (savedTodos) {
-        todos.value = JSON.parse(savedTodos); // LocalStorage'dan veriyi alıp, todos'a atayın
+        todos.value = JSON.parse(savedTodos); 
     }
 });
 

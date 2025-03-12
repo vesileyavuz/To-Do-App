@@ -7,8 +7,7 @@
             @click="updateTodo">{{ todo.title }}
         </span>
 
-        <NuxtLink :to="`/todos/${todo.id}`" class="text-blue-500 hover:text-blue-700 px-2">Detaylar</NuxtLink>
-        <button @click="updateTodo" class=" text-blue-500 hover:text-blue-700 px-2">Güncelle</button>
+        <NuxtLink :to="`/todos/${todo.id}`" class="text-blue-500 hover:text-blue-700 px-2">Güncelle</NuxtLink>
         <button @click="deleteTodo(todo.id)" class="text-red-600 hover:text-red-700 px-2">Sil</button>
     </div>
 </template>
@@ -19,8 +18,6 @@ defineProps({
     updateTodo: Function,
     deleteTodo: Function
 });
-
-
 
 </script>
 
