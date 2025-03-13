@@ -1,15 +1,16 @@
 <template>
-    
-    <div class="flex justify-between items-center bg-white shadow p-4 mb-4 rounded-xl">
-        <span 
+    <tr class="p-2 bg-white rounded-md">
+        <td class="p-2">
+            <span 
             :class="{ 'line-through text-gray-600': todo.completed }"
             class="flex-1 cursor-pointer"
             @click="updateTodo">{{ todo.title }}
-        </span>
-
-        <NuxtLink :to="`/todos/${todo.id}`" class="text-blue-500 hover:text-blue-700 px-2">Güncelle</NuxtLink>
-        <button @click="deleteTodo(todo.id)" class="text-red-600 hover:text-red-700 px-2">Sil</button>
-    </div>
+            </span>
+        </td>
+        <td class="text-center">  <NuxtLink :to="`/todos/${todo.id}`" class="text-blue-500 hover:text-blue-700 px-2 bg-white rounded-md">Güncelle</NuxtLink>
+            <button @click="deleteTodo(todo.id)" class="transition-all bg-red-600 hover:bg-red-700 text-white rounded-md mx-2 px-2">Sil</button>
+        </td>
+    </tr>
 </template>
 
 <script setup>
@@ -18,7 +19,6 @@ defineProps({
     updateTodo: Function,
     deleteTodo: Function
 });
-
 </script>
 
 <style scoped>

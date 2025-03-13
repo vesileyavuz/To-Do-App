@@ -1,4 +1,5 @@
 import { ref, onMounted, computed } from 'vue';
+import { useRouter } from 'vue-router';
 
 interface Todo {
     userId: number;
@@ -8,68 +9,58 @@ interface Todo {
 }
 
 const todos = ref<Todo[]>([]);
+const newTodoTitle = ref<string>('');
+const router = useRouter();
+
+const loadTodosFromLocalStorage = () => {
+    const savedTodos = localStorage.getItem('todos');
+    if (savedTodos) {
+        todos.value = JSON.parse(savedTodos);
+    }
+};
+
+const saveTodosToLocalStorage = () => {
+    localStorage.setItem('todos', JSON.stringify(todos.value));
+};
 
 const fetchTodos = async () => {
     try {
-        const storedTodos = localStorage.getItem('todos');
-        if (storedTodos) {
-            todos.value = JSON.parse(storedTodos);
-        } else {
-            const response = await fetch('https://jsonplaceholder.typicode.com/todos?_limit=10');
-            if (!response.ok) {
-                throw new Error("Görevler yüklenemedi.");
-            }
-            todos.value = await response.json();
-            localStorage.setItem('todos', JSON.stringify(todos.value));
-        }
+        const response = await fetch('https://jsonplaceholder.typicode.com/todos?_limit=10');
+        todos.value = await response.json();
+        saveTodosToLocalStorage();
     } catch (error) {
         alert("Görevler yüklenirken hata oluştu.");
+        loadTodosFromLocalStorage();
     }
 };
 
-const addTodo = async (title: string) => {
-    if (!title.trim()) return;
-    const newTodo: Todo = { title, completed: false, userId: 1, id: Date.now() };
-    try {
-        const response = await fetch('https://jsonplaceholder.typicode.com/todos', {
-            method: "POST",
-            body: JSON.stringify(newTodo),
-            headers: { 'Content-Type': 'application/json' },
-        });
-        const addedTodo = await response.json();
-        addedTodo.id = newTodo.id;
-        todos.value.push(addedTodo);
-    } catch (error) {
-        alert("Görev eklenirken hata oluştu.");
-    }
+const addTodo = async () => {
+    if (!newTodoTitle.value.trim()) return;
+
+    const newTodo: Todo = {
+        id: Date.now(), // Todo'ya benzersiz bir id atıyoruz
+        title: newTodoTitle.value,
+        completed: false,
+        userId: 1
+    };
+
+    // Yeni todo'yu localStorage'a kaydediyoruz
+    todos.value.push(newTodo);
+    saveTodosToLocalStorage();
+
+    // Kullanıcıyı yeni todo'nun detay sayfasına yönlendiriyoruz
+    router.push(`/todos/${newTodo.id}`);  // Detay sayfasına yönlendirme
 };
 
 const updateTodo = async (id: number, newTitle: string) => {
-    if (!newTitle.trim()) return;
-
     try {
-        const response = await fetch(`https://jsonplaceholder.typicode.com/todos/${id}`, {
-            method: 'PUT',
-            body: JSON.stringify({ title: newTitle }),
-            headers: {
-                'Content-type': 'application/json'
-            }
-        });
-
-        if (!response.ok) {
-            throw new Error("Görev güncellenemedi.");
-        }
-
-        const updatedTodo = await response.json();
         const index = todos.value.findIndex(todo => todo.id === id);
         if (index !== -1) {
-            todos.value[index].title = updatedTodo.title;
+            todos.value[index].title = newTitle;
+            saveTodosToLocalStorage();
         }
-        localStorage.setItem('todos', JSON.stringify(todos.value));
-        await fetchTodos();
-        alert('Görev başarıyla güncellendi');
     } catch (error) {
-        alert('Görev güncellenirken bir hata oluştu');
+        alert("Görev güncellenirken hata oluştu.");
     }
 };
 
@@ -79,6 +70,7 @@ const deleteTodo = async (id: number) => {
             method: "DELETE",
         });
         todos.value = todos.value.filter(todo => todo.id !== id);
+        saveTodosToLocalStorage();
     } catch (error) {
         alert("Görev silinirken hata oluştu.");
     }
@@ -92,6 +84,7 @@ onMounted(fetchTodos);
 export default function useTodos() {
     return {
         todos,
+        newTodoTitle,
         addTodo,
         updateTodo,
         deleteTodo,
