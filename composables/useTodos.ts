@@ -8,7 +8,7 @@ interface Todo {
     completed: boolean;
 }
 
-const todos = ref<Todo[]>([]);
+const todos = ref<{ id: number; title: string; completed: boolean }[]>([]);
 const newTodoTitle = ref<string>('');
 const router = useRouter();
 
@@ -35,7 +35,7 @@ const fetchTodos = async () => {
 };
 
 const addTodo = async (title:string) => {
-    debugger;
+    
     if (!title.trim()) return;
 
     const newTodo: Todo = {
@@ -77,6 +77,17 @@ const deleteTodo = async (id: number) => {
     }
 };
 
+const completeTodo = async (id:number) => {
+    const todo = todos.value.find((t) => t.id == id);
+  if (todo) {
+    todo.completed = !todo.completed; // Tamamlandı bilgisini tersine çevirdik
+    saveTodosToLocalStorage(); //  LocalStorage güncellendi
+    alert("Görev durumu değişti.")
+  }
+};
+
+
+
 const completedTodos = computed(() => todos.value.filter(todo => todo.completed));
 const pendingTodos = computed(() => todos.value.filter(todo => !todo.completed));
 
@@ -90,6 +101,7 @@ export default function useTodos() {
         updateTodo,
         deleteTodo,
         completedTodos,
-        pendingTodos
+        pendingTodos,
+        completeTodo
     };
 }

@@ -14,8 +14,8 @@
                     <tr>
                         <th class=" text-pink-600 border border-gray-700 dark:border-white rounded-xl">Görev Adı</th>
                         <th class=" text-pink-600 border border-gray-700 dark:border-white rounded-xl">İşlemler</th>
-                    
-                    </tr>
+                        <th class=" text-pink-600 border border-gray-700 dark:border-white rounded-xl">Durum</th>         
+                    </tr> 
                 </thead>
                 <tbody>
                     <TodoItem
@@ -23,7 +23,8 @@
                         :key="todo.id"
                         :todo="todo"
                         :updateTodo="updateTodo"
-                        :deleteTodo="deleteTodo"/>
+                        :deleteTodo="deleteTodo"
+                        :completeTodo="completeTodo"/>
                 </tbody>
             </table>
             </div>
@@ -36,11 +37,11 @@ import { ref } from 'vue';
 import useTodos from '~/composables/useTodos';
 import TodoItem from '~/components/TodoItem.vue';
 
-const { todos, addTodo, updateTodo, deleteTodo, fetchTodos } = useTodos();
+const { todos, addTodo, updateTodo, deleteTodo, fetchTodos, completeTodo } = useTodos();
 const newTodo = ref('');
 
 const handleAddTodo = () => {
-    debugger;
+    
     if (newTodo.value.trim() === '') return;
     addTodo(newTodo.value);
     newTodo.value = '';

@@ -41,10 +41,11 @@
 
 
 <script setup lang="ts">
+import useTodos from "@/composables/useTodos";
 import { ref, onMounted } from 'vue';
 import { useRoute, useRouter } from "vue-router";
 
-
+const { completeTodo } = useTodos();
 const route = useRoute();
 const router = useRouter();
 const todo:any = ref(null);
