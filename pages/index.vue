@@ -4,10 +4,14 @@
             <h1 class=" text-pink-600 gradient-text italic font-bold">TO-DO LİST</h1>
             <div class="bg-gradient-to-r from-pink-500 to-violet-500 h-2 w-50 my-4"></div>
 
-            <form @submit.prevent="handleAddTodo" class="flex mb-4">
-                <input v-model="newTodo" type="text" class="border border-gray-300 dark:border-white mr-4 rounded-xl" placeholder="Yeni görev ekle">
-                <button class="bg-indigo-500 hover:bg-fuchsia-500 text-white py-2 px-4 rounded-xl">Ekle</button>
+            <div class="flex justify-between items-center mb-2">
+            <form @submit.prevent="handleAddTodo" class="flex gap-2">
+                <input v-model="newTodo" type="text" class="border border-gray-300 dark:border-white p-2 rounded-xl" placeholder="Yeni görev ekle">
+                <button class="bg-indigo-500 hover:bg-fuchsia-500 text-white p-2 rounded-xl">Ekle</button>
             </form>
+                <input v-model="searchQuery" type="text" placeholder="Görev ara" class="border border-gray-300 dark:border-white p-2 rounded-xl" @input="filteredTodos(searchQuery)"/>
+            </div>
+               
             <div class="task-list-container overflow-y-auto h-[65vh]">
             <table class="min-w-full table-auto border-separate border-spacing-2 border border-white dark:border-white rounded-xl">
                 <thead>
@@ -39,7 +43,7 @@ import { ref } from 'vue';
 import useTodos from '~/composables/useTodos';
 import TodoItem from '~/components/TodoItem.vue';
 
-const { todos, addTodo, updateTodo, deleteTodo, fetchTodos, completeTodo } = useTodos();
+const { todos, addTodo, updateTodo, deleteTodo, fetchTodos, completeTodo, searchQuery, filteredTodos } = useTodos();
 const newTodo = ref('');
 
 const handleAddTodo = () => {

@@ -86,8 +86,22 @@ const completeTodo = async (id:number) => {
   }
 };
 
+const filteredTodos =(searchQuery:string) => {
+    debugger;
+    var data=localStorage.getItem("todos");
+    const allTodos=JSON.parse(data||'');
+    if(allTodos!=null){
+        todos.value=allTodos.filter((todo:any) => todo.title.toLowerCase().includes(searchQuery.toLowerCase()));
+    }
+    if (!searchQuery) {
+        todos.value=allTodos;
+      }
+    return todos.value;
+  };
 
 
+
+const searchQuery = ref(""); //girilen değeri tutsun
 const completedTodos = computed(() => todos.value.filter(todo => todo.completed));
 const pendingTodos = computed(() => todos.value.filter(todo => !todo.completed));
 
@@ -102,6 +116,8 @@ export default function useTodos() {
         deleteTodo,
         completedTodos,
         pendingTodos,
-        completeTodo
+        completeTodo,
+        searchQuery,
+        filteredTodos
     };
 }

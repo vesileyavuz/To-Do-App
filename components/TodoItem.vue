@@ -3,7 +3,7 @@
         
         <input type="checkbox" :checked="todo.completed" @click="completeTodo(todo.id)" />
         <td :class="{ 'text-green-400': todo.completed, 'text-gray-800': !todo.completed }">
-                                    {{ todo.completed ? "Tamamlandı" : "Devam Ediyor" }}
+            {{ todo.completed ? "Tamamlandı" : "Devam Ediyor" }}
         </td>
         <td>
             <span 
