@@ -4,7 +4,7 @@
             <h1 class=" text-pink-600 gradient-text italic font-bold">TO-DO LİST</h1>
             <div class="bg-gradient-to-r from-pink-500 to-violet-500 h-2 w-50 my-4"></div>
 
-            <div class="flex justify-between items-center mb-2">
+            <div class="flex justify-between items-center mb-2 flex-wrap gap-2">
             <form @submit.prevent="handleAddTodo" class="flex gap-2">
                 <input v-model="newTodo" type="text" class="border border-gray-300 dark:border-white p-2 rounded-xl" placeholder="Yeni görev ekle">
                 <button class="bg-indigo-500 hover:bg-fuchsia-500 text-white p-2 rounded-xl">Ekle</button>
