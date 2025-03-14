@@ -12,9 +12,11 @@
             <table class="min-w-full table-auto border-separate border-spacing-2 border border-white dark:border-white rounded-xl">
                 <thead>
                     <tr>
+                        <th class=" text-pink-600 border border-gray-700 dark:border-white rounded-xl"> </th>
+                        <th class=" text-pink-600 border border-gray-700 dark:border-white rounded-xl">Durum</th>
                         <th class=" text-pink-600 border border-gray-700 dark:border-white rounded-xl">Görev Adı</th>
                         <th class=" text-pink-600 border border-gray-700 dark:border-white rounded-xl">İşlemler</th>
-                        <th class=" text-pink-600 border border-gray-700 dark:border-white rounded-xl">Durum</th>         
+                                 
                     </tr> 
                 </thead>
                 <tbody>
