@@ -34,12 +34,13 @@ const fetchTodos = async () => {
     }
 };
 
-const addTodo = async () => {
-    if (!newTodoTitle.value.trim()) return;
+const addTodo = async (title:string) => {
+    debugger;
+    if (!title.trim()) return;
 
     const newTodo: Todo = {
         id: Date.now(), // Todo'ya benzersiz bir id atıyoruz
-        title: newTodoTitle.value,
+        title: title,
         completed: false,
         userId: 1
     };
@@ -49,7 +50,7 @@ const addTodo = async () => {
     saveTodosToLocalStorage();
 
     // Kullanıcıyı yeni todo'nun detay sayfasına yönlendiriyoruz
-    router.push(`/todos/${newTodo.id}`);  // Detay sayfasına yönlendirme
+    await router.push(`/todos/${newTodo.id}`);  // Detay sayfasına yönlendirme
 };
 
 const updateTodo = async (id: number, newTitle: string) => {

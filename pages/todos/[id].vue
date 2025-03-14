@@ -20,7 +20,7 @@
                             </p>
 
                             <div class="mt-4">
-                                <input v-model="updatedTitle" type="text" class="border border-gray-300 p-3 rounded-md w-full mb-4" placeholder="To-Do Güncelle">
+                                <input v-model="todo.title" type="text" class="border border-gray-300 p-3 rounded-md w-full mb-4" placeholder="To-Do Güncelle">
                                 <button @click="updateTodo" class="w-full bg-indigo-500 hover:bg-indigo-700 text-white py-3 rounded-md font-semibold">
                                     Güncelle
                                 </button>
@@ -48,57 +48,53 @@ import { useRoute, useRouter } from "vue-router";
 const route = useRoute();
 const router = useRouter();
 const todo:any = ref(null);
-const updatedTitle = ref("");
 
 
 const fetchTodo = async () => {
   try {
-    const response = await fetch(`https://jsonplaceholder.typicode.com/todos/${route.params.id}`); // API den veri çekeriz.
-    if (!response.ok) {
-      throw new Error("Görev bulunamadı!");
-    }
-    todo.value = await response.json();
-    updatedTitle.value = todo.value.title;
+    debugger;
+    const savedTodos:any = localStorage.getItem('todos');
 
-//Local storageye kaydediyoruz.
-    localStorage.setItem(`todo-${route.params.id}`, JSON.stringify(todo.value));
+    var todos=JSON.parse(savedTodos);
+    var selectedTodo=todos.find((x:any)=>x.id==route.params.id);
+    if(selectedTodo==null)
+    {
+      const response = await fetch(`https://jsonplaceholder.typicode.com/todos/${route.params.id}`); // API den veri çekeriz.
+      if (!response.ok) {
+        throw new Error("Görev bulunamadı!");
+      }
+      todo.value = await response.json();
+    }
+    else{
+      todo.value = selectedTodo;
+    }
     
   } catch (error) {
-    //API çağrısı başarısız olursa local storage kontrol edilir.
-    const localTodo = localStorage.getItem(`todo-${route.params.id}`);
-
-    if (localTodo) {
-        //LocalStorage da veri varsa bu kullanılır.
-        todo.value = JSON.parse(localTodo);
-        updatedTitle.value = todo.value.title;
-        alert("Görev localStorage'dan alındı.")
-    } else {
-        alert("Veri Bulunamadı!");
-    }
+    alert("Veri Bulunamadı!");
   }
 };
 
 const updateTodo = async () => {
-    debugger;
-  if (!updatedTitle.value.trim()) return;
+    
+  if (!todo.value.title.trim()) return;
   try {
-    const response = await fetch(`https://jsonplaceholder.typicode.com/todos/${route.params.id}`, {
-      method: "PUT",
-      body: JSON.stringify({
-        ...todo.value, title: updatedTitle.value
-      }),
-      headers: {
-        "Content-type": "application/json"
-      }
-    });
-    const updateTodo = await response.json();
-    todo.value = updateTodo;
-
+    debugger;
     const todos = JSON.parse(localStorage.getItem('todos') || '[]');
     const index = todos.findIndex((t:any )=> t.id == todo.value.id );
-    if (index !== -1) {
-        todos[index] = updateTodo;
-         
+    if (index !== -1 && todo.value!=null) {
+        todos[index] = todo.value;
+    }
+    else{
+        const response = await fetch(`https://jsonplaceholder.typicode.com/todos/${route.params.id}`, {
+        method: "PUT",
+        body: JSON.stringify(todo.value),
+        headers: {
+          "Content-type": "application/json"
+        }
+      });
+      const result = await response.json();
+      todo.value = result;
+
     }
     localStorage.setItem('todos', JSON.stringify(todos));  
     alert("Görev başarıyla güncellendi.")

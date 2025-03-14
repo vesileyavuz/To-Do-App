@@ -40,6 +40,7 @@ const { todos, addTodo, updateTodo, deleteTodo, fetchTodos } = useTodos();
 const newTodo = ref('');
 
 const handleAddTodo = () => {
+    debugger;
     if (newTodo.value.trim() === '') return;
     addTodo(newTodo.value);
     newTodo.value = '';
@@ -51,7 +52,7 @@ const handleAddTodo = () => {
      if (savedTodos) {
          //Eğer localStorage'da veriler varsa, veriyi alıp todos'a atıyoruz
          todos.value = JSON.parse(savedTodos);
-         alert("LocalStorage'dan veriler yüklendi!");
+         
      } else {
          try { // Eğer localStorage'da veri yoksa, servise istek atarak verileri çekiyoruz.
              const response = await fetch('https://jsonplaceholder.typicode.com/todos');
@@ -61,12 +62,12 @@ const handleAddTodo = () => {
                  todos.value = data;
 
                  localStorage.setItem('todos', JSON.stringify(data)); // Veriyi LocalStorage kaydediyoruz.
-                 alert("Veriler servisten başarıyla alındı ve LocalStorage'a kaydedildi.");
+                 
              } else {
                  alert("Veriler alınırken bir hata oluştu.");
              }
          } catch (error) {
-             alert("Veriler alınırken bir hata oluştu lütden tekrar deneyiniz.");
+             alert("Veriler alınırken bir hata oluştu lütfen tekrar deneyiniz.");
      }
  }
  });
